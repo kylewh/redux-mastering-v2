@@ -4,7 +4,6 @@ import { loadState, saveState } from './localStorage'
 import { throttle } from 'lodash'
 
 const configureStore = () => {
-
   const persistedState = loadState()
 
   const store = createStore(

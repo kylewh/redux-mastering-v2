@@ -1,7 +1,9 @@
+const localStorage = window.localStorage
+
 export const loadState = () => {
   try {
     const serializedState = localStorage.getItem('state')
-    if ( serializedState === null ) {
+    if (serializedState === null) {
       return undefined
     }
     return JSON.parse(serializedState)

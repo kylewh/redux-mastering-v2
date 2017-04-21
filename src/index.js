@@ -1,7 +1,6 @@
 import 'babel-polyfill'
 import React from 'react'
 import { render } from 'react-dom'
-import App from './components/App'
 import configureStore from './configureStore'
 import Root from './components/Root'
 

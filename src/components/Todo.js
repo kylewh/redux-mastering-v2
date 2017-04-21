@@ -1,4 +1,4 @@
-import React, { PropTypes } from 'react'
+import React from 'react'
 
 const Todo = ({ onClick, completed, text }) => (
   <li
