@@ -12,7 +12,7 @@ const Root = ({ store }) => (
       <Route
         path='/:filter?'
         component={App}
-        exact
+        exact={true}
       />
     </Router>
   </Provider>
