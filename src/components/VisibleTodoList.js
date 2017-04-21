@@ -1,28 +1,47 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import { toggleTodo } from '../actions'
+import * as actions from '../actions'
 import { withRouter } from 'react-router-dom'
 import TodoList from './TodoList'
 import { getVisibleTodos } from '../reducers'
 import { fetchTodos } from '../api'
 
 class VisibleTodoList extends Component {
+
   componentDidMount() {
-    fetchTodos(this.props.filter).then(todos => {
-      console.log(this.props.filter, todos)
-    })
+    this.fetchData()
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     if (prevProps.filter !== this.props.filter) {
-      fetchTodos(this.props.filter).then(todos => {
-        console.log(this.props.filter, todos)
-      })
+      this.fetchData()
     }
   }
 
+  fetchData () {
+    // receiveTodos come from actionCreators,
+    // injected by connect()
+    const { filter, receiveTodos } = this.props
+    // when we get data from api,
+    // we dispatch an action for updating state
+    // then we can see the data be rendered
+    // before there, we have to implement corresponding reducers
+    // You may foresee this reducers will be another combined reducer
+    // because we will have three child-state:
+    // 1. all 2.active 3.completed
+    fetchTodos(filter).then(todos => {
+      receiveTodos(filter, todos)
+    })
+  }
+
   render () {
-    return <TodoList { ...this.props }/>
+    const { toggleTodo, ...rest } = this.props
+    return (
+      <TodoList
+        { ...rest }
+        onTodoClick={toggleTodo}
+      />
+    )
   }
 }
 
@@ -39,7 +58,7 @@ const mapStateToProps = (state, { match }) => {
  */
 VisibleTodoList = withRouter(connect(
   mapStateToProps,
-  { onTodoClick: toggleTodo}
+  actions
 )(VisibleTodoList))
 
 export default VisibleTodoList
