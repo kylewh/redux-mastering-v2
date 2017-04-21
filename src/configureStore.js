@@ -4,16 +4,10 @@ import { throttle } from 'lodash'
 
 const addLoggingToDispatch = (store) => {
   const rawDispatch = store.dispatch
-
   if (!console.group) {
     return rawDispatch
   }
-  /**
-   * Here we do the wrapping
-   * As same as the original dispatch,
-   * It also receive an action as arguments,
-   * then return back the state.
-   */
+
   return (action) => {
     console.group(action.type)
     console.log('%c previous state: ', 'color: gray', store.getState())
@@ -25,6 +19,22 @@ const addLoggingToDispatch = (store) => {
   }
 }
 
+// Same trick as we did in addLoggingToDispatch
+const addPromiseSupportToDispatch = (store) => {
+  const rawDispatch = store.dispatch
+  return (action) => {
+    // Key Step: Recognize promise
+    if (typeof action.then === 'function') {
+      // rawDispatch will receive an action object as 
+      // fullfilled value which is returned by receiveTodos
+      // Then rawDispatch as the resolve function will be executed
+      // Hence we indirectly update the state
+      return action.then(rawDispatch)
+    }
+    return rawDispatch(action)
+  }
+}
+
 const configureStore = () => {
   const store = createStore(todoApp)
 
@@ -32,11 +42,7 @@ const configureStore = () => {
     store.dispatch = addLoggingToDispatch(store)
   }
 
-  store.subscribe(throttle(() => {
-    saveState({
-      todos: store.getState().todos
-    })
-  }, 1000))
+  store.dispatch = addPromiseSupportToDispatch(store)
 
   return store
 }

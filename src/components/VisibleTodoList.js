@@ -4,7 +4,6 @@ import * as actions from '../actions'
 import { withRouter } from 'react-router-dom'
 import TodoList from './TodoList'
 import { getVisibleTodos } from '../reducers'
-import { fetchTodos } from '../api'
 
 class VisibleTodoList extends Component {
 
@@ -19,19 +18,11 @@ class VisibleTodoList extends Component {
   }
 
   fetchData () {
-    // receiveTodos come from actionCreators,
-    // injected by connect()
-    const { filter, receiveTodos } = this.props
-    // when we get data from api,
-    // we dispatch an action for updating state
-    // then we can see the data be rendered
-    // before there, we have to implement corresponding reducers
-    // You may foresee this reducers will be another combined reducer
-    // because we will have three child-state:
-    // 1. all 2.active 3.completed
-    fetchTodos(filter).then(todos => {
-      receiveTodos(filter, todos)
-    })
+    const { filter, fetchTodos } = this.props
+    // Now we want to extract this two nested operation
+    // into n single action creator
+    // So we don't have any asycn logic in the component
+    fetchTodos(filter)
   }
 
   render () {
