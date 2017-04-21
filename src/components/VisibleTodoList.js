@@ -15,14 +15,6 @@ const mapStateToProps = (state, { match }) => ({
   todos: getVisibleTodos(state, match.params.filter || 'all')
 })
 
-const mapDispatchToProps = (dispatch) => {
-  return {
-    onTodoClick: (id) => {
-      dispatch(toggleTodo(id))
-    }
-  }
-}
-
 /**
  * Shortcut way
  * { propNames: actionCreator }
