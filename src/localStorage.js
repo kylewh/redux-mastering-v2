@@ -1,7 +1,3 @@
-/**
- * We must wrapped getItem && setItem code into 
- * try catch beacuse they may failed.
- */
 export const loadState = () => {
   try {
     const serializedState = localStorage.getItem('state')
