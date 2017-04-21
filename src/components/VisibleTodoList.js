@@ -2,23 +2,17 @@ import { connect } from 'react-redux'
 import { toggleTodo } from '../actions'
 import { withRouter } from 'react-router-dom'
 import TodoList from './TodoList'
-
-
-const getVisibleTodos = (todos, filter) => {
-  switch (filter) {
-    case 'all':
-      return todos
-    case 'completed':
-      return todos.filter(t => t.completed)
-    case 'active':
-      return todos.filter(t => !t.completed)
-    default:
-      throw new Error(`Unknown filter: ${filter}.`)
-  }
-}
-
+import { getVisibleTodos } from '../reducers'
+/**
+ * We noticed inside the getVisibleTodos,
+ * the arguments was specified to todos inside the state
+ * It's a problem once we changed the state structure.
+ * We should extract this selection and put into reducer
+ * we will create a selector to fullfill this selection
+ * Remember : using selector is a common best-practice in react
+ */
 const mapStateToProps = (state, { match }) => ({
-  todos: getVisibleTodos(state.todos, match.params.filter || 'all')
+  todos: getVisibleTodos(state, match.params.filter || 'all')
 })
 
 const mapDispatchToProps = (dispatch) => {
