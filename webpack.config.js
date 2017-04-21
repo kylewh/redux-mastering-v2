@@ -15,7 +15,7 @@ module.exports = {
     bundle: './src/index.js',
     vendor: VENDOR_LIST
   },
-  devtool: "cheap-eval-source-map",
+  devtool: 'cheap-eval-source-map',
   output: {
     filename: '[name].[chunkhash].js',
     path: path.resolve(__dirname, 'dist')
@@ -29,11 +29,10 @@ module.exports = {
   },
   devServer: {
     historyApiFallback: {
-      index:'index.html'
+      index: 'index.html'
     },
-    contentBase: path.join(__dirname, "dist"),
+    contentBase: path.join(__dirname, 'dist'),
     compress: true,
-    publicPath: '/dist/',
     port: 9000
   },
   plugins: [
@@ -43,7 +42,7 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './index.html',
       filename: './index.html',
-      title: 'Mastering-Redux-V2',
+      title: 'Mastering-Redux-V2'
     })
   ]
 }
