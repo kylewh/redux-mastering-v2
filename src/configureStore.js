@@ -1,6 +1,6 @@
 import { createStore, applyMiddleware } from 'redux'
 import promise from 'redux-promise'
-import createLogger from 'redux-logger'
+import { createLogger } from 'redux-logger'
 import todoApp from './reducers'
 
 const configureStore = () => {
@@ -17,8 +17,9 @@ const configureStore = () => {
   }
 
   // The last arguments of createStore called enhancer --optional
-  return store = createStore(
+  return createStore(
     todoApp,
+    window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
     applyMiddleware(...middlewares)
   )
 }
