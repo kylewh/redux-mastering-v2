@@ -1,8 +1,8 @@
-const localStorage = window.localStorage
 
 export const loadState = () => {
   try {
     const serializedState = localStorage.getItem('state')
+    console.log(1)
     if (serializedState === null) {
       return undefined
     }
