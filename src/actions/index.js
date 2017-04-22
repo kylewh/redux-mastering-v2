@@ -16,7 +16,10 @@ const receiveTodos = (filter, response) => ({
 
 export const fetchTodos = (filter) => (dispatch, getState) => {
   if (getIsFetching(getState(), filter)) {
-    return
+    // change the earlier return to Promise.solve()
+    // it becomes the return value of dispatching this action creator
+    // which enable us to follow up inside component
+    return Promise.resolve()
   }
   // Once we get the control of dispatch
   // We can dispatch an action whenever we want
