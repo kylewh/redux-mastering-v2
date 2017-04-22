@@ -1,9 +1,10 @@
 import React, { Component } from 'react'
 import { connect } from 'react-redux'
-import * as actions from '../actions'
 import { withRouter } from 'react-router-dom'
 import TodoList from './TodoList'
-import { getVisibleTodos, getIsFetching } from '../reducers'
+import FetchError from './FetchError'
+import * as actions from '../actions'
+import { getVisibleTodos, getErrorMessage, getIsFetching } from '../reducers'
 
 class VisibleTodoList extends Component {
 
@@ -23,9 +24,17 @@ class VisibleTodoList extends Component {
   }
 
   render () {
-    const { toggleTodo, isFecthing, todos } = this.props
+    const { toggleTodo, errorMessage, isFecthing, todos } = this.props
     if (isFecthing && !todos.length) {
-      return <p>Loading</p>
+      return <p style={{color: 'green'}}>Loading</p>
+    }
+    if (errorMessage && !todos.length) {
+      return (
+        <FetchError
+          message={errorMessage}
+          onRetry={() => this.fetchData()}
+        />
+      )
     }
     return (
       <TodoList
@@ -40,14 +49,12 @@ const mapStateToProps = (state, { match }) => {
   const filter = match.params.filter || 'all'
   return {
     todos: getVisibleTodos(state, filter),
+    errorMessage: getErrorMessage(state, filter),
     isFecthing: getIsFetching(state, filter),
     filter
   }
 }
 
-/**
- * we do this for utlizing lifecycle hook above
- */
 VisibleTodoList = withRouter(connect(
   mapStateToProps,
   actions

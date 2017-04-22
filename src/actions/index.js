@@ -1,47 +1,48 @@
-import { v4 } from 'node-uuid'
+import { normalize } from 'normalizr'
+import * as schema from './schema'
 import * as api from '../api'
 import { getIsFetching } from '../reducers'
 
-const requestTodos = (filter) => ({
-  type: 'REQUEST_TODOS',
-  filter
-})
-
-const receiveTodos = (filter, response) => ({
-  type: 'RECEIVE_TODOS',
-  filter,
-  response
-})
-
-
 export const fetchTodos = (filter) => (dispatch, getState) => {
   if (getIsFetching(getState(), filter)) {
-    // change the earlier return to Promise.solve()
-    // it becomes the return value of dispatching this action creator
-    // which enable us to follow up inside component
     return Promise.resolve()
   }
-  // Once we get the control of dispatch
-  // We can dispatch an action whenever we want
-  dispatch(requestTodos(filter))
-  return api.fetchTodos(filter).then(response => {
-    dispatch(receiveTodos(filter, response))
+
+  dispatch({
+    type: 'FETCH_TODOS_REQUEST',
+    filter
   })
+
+  return api.fetchTodos(filter).then(
+    response => {
+      return dispatch({
+        type: 'FETCH_TODOS_SUCCESS',
+        filter,
+        response: normalize(response, schema.arrayOfTodos)
+      })
+    },
+    error => {
+      dispatch({
+        type: 'FETCH_TODOS_FAILURE',
+        filter,
+        message: error.message || 'SOMETHING WENT WRONG'
+      })
+    }
+  )
 }
 
+export const addTodo = (text) => (dispatch) =>
+  api.addTodo(text).then(response => {
+    dispatch({
+      type: 'ADD_TODOS_SUCCESS',
+      response: normalize(response, schema.todo)
+    })
+  })
 
-export const addTodo = (text) => {
-  return {
-    type: 'ADD_TODO',
-    id: v4(),
-    text
-  }
-}
-
-export const toggleTodo = (id) => {
-  return {
-    type: 'TOGGLE_TODO',
-    id
-  }
-}
-
+export const toggleTodo = (id) => (disptach) =>
+  api.toggleTodo(id).then(response => {
+    disptach({
+      type: 'TOGGLE_TODO_SUCCESS',
+      response: normalize(response, schema.todo)
+    })
+  })
