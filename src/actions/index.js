@@ -1,5 +1,6 @@
 import { v4 } from 'node-uuid'
 import * as api from '../api'
+import { getIsFetching } from '../reducers'
 
 const requestTodos = (filter) => ({
   type: 'REQUEST_TODOS',
@@ -13,7 +14,10 @@ const receiveTodos = (filter, response) => ({
 })
 
 
-export const fetchTodos = (filter) => (dispatch) => {
+export const fetchTodos = (filter) => (dispatch, getState) => {
+  if (getIsFetching(getState(), filter)) {
+    return
+  }
   // Once we get the control of dispatch
   // We can dispatch an action whenever we want
   dispatch(requestTodos(filter))
