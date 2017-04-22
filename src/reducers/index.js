@@ -20,7 +20,7 @@ export default todos
 
 /**
  * This selector will be used in VisibleTodoList
- * We don't want this container component to handle the state selection
+ * We don't want this container component to handle the state selection\
  * In other words, component should know about structure of state 
  * ======== AS LESS AS POSSIBLE ! ========
  */
@@ -40,3 +40,4 @@ export const getVisibleTodos = (state, filter) => {
  */
 export const getIsFetching = (state, filter) =>
   fromList.getIsFecthing(state.listByFilter[filter])
+  

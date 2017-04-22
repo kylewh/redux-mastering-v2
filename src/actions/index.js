@@ -1,7 +1,7 @@
 import { v4 } from 'node-uuid'
 import * as api from '../api'
 
-export const requestTodos = (filter) => ({
+const requestTodos = (filter) => ({
   type: 'REQUEST_TODOS',
   filter
 })
@@ -12,16 +12,16 @@ const receiveTodos = (filter, response) => ({
   response
 })
 
-// Now be careful, this action creator's
-// return value is a promise.
-// Redux only allows dispatch in plain objects rather than promises.
-// So we have to make this async action acceptable to dispatch
-// Here is why will use middleware in future
-// Before that, we are going to implement stuffs like middleware
-export const fetchTodos = (filter) =>
-  api.fetchTodos(filter).then(response =>
-    receiveTodos(filter, response)
-  )
+
+export const fetchTodos = (filter) => (dispatch) => {
+  // Once we get the control of dispatch
+  // We can dispatch an action whenever we want
+  dispatch(requestTodos(filter))
+  return api.fetchTodos(filter).then(response => {
+    dispatch(receiveTodos(filter, response))
+  })
+}
+
 
 export const addTodo = (text) => {
   return {

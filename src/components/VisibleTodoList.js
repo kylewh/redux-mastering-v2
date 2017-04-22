@@ -18,13 +18,7 @@ class VisibleTodoList extends Component {
   }
 
   fetchData () {
-    const { filter, requestTodos, fetchTodos } = this.props
-    // Watch out! here is an async flow.
-    // No way to do this in your app
-    // We should wrap it into an single async action
-    // dispatch REQUEST_TODO action => waitting for data
-    // => dispatch RECEIVE_TODO action
-    requestTodos(filter)
+    const { filter, fetchTodos } = this.props
     fetchTodos(filter)
   }
 
